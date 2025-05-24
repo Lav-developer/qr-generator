@@ -533,3 +533,9 @@ st.markdown("""
     <p>Developed by Lav Kush | <a href="https://lav-developer.netlify.app" target="_blank">Portfolio</a></p>
 </div>
 """, unsafe_allow_html=True)
+
+
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 8501))
+    st.run(host="0.0.0.0", port=port)
