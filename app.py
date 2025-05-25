@@ -214,7 +214,7 @@ if "inputs" not in st.session_state:
 
 # App layout
 st.set_page_config(
-    page_title="QR Code Generator Pro",
+    page_title="QR Code Generator",
     page_icon="🔳",
     layout="wide"
 )
