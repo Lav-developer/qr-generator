@@ -6,6 +6,7 @@ import re
 from datetime import datetime
 import qrcode.image.svg
 from io import BytesIO
+import pyperclip
 
 # Constants
 ERROR_CORRECT_LEVELS = {
@@ -259,8 +260,8 @@ with st.expander("📚 How to use", expanded=False):
     2. **Fill in the required fields**
     3. **Customize** the QR code appearance in the sidebar
     4. **Generate** and download your QR code
+    5. **Share** your QR code via email or social media
     """)
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png", width=200)
 
 # Category selection
 categories = [
@@ -484,9 +485,20 @@ if generate_btn:
                 col1, col2 = st.columns(2)
                 with col1:
                     st.image(png_bytes, caption="Generated QR Code", use_container_width=True)
+                    
+                    # Copy to Clipboard Button
+                    if st.button("📋 Copy QR to Clipboard", help="Copy the QR code image to your clipboard"):
+                        try:
+                            img = Image.open(io.BytesIO(png_bytes))
+                            pyperclip.copy(img)
+                            st.success("✅ Copied to clipboard!")
+                        except Exception as e:
+                            st.error(f"Failed to copy: {e}")
                 
                 with col2:
                     st.success("QR code generated successfully!")
+                    
+                    # Download Buttons
                     st.download_button(
                         label="Download PNG",
                         data=png_bytes,
@@ -502,6 +514,37 @@ if generate_btn:
                     
                     st.markdown("**Encoded data:**")
                     st.code(data, language="text")
+                    
+                    # Share Options
+                    st.markdown("### Share QR Code")
+                    share_text = f"Check out this QR Code I generated! It links to: {data}"
+                    
+                    # Email Share
+                    st.markdown(f"""
+                    <a href="mailto:?subject=QR Code&body={share_text}" target="_blank">
+                        <button style="background-color: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+                            📧 Share via Email
+                        </button>
+                    </a>
+                    """, unsafe_allow_html=True)
+                    
+                    # Twitter Share
+                    st.markdown(f"""
+                    <a href="https://twitter.com/intent/tweet?text={share_text}" target="_blank">
+                        <button style="background-color: #1DA1F2; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+                            🐦 Share on Twitter
+                        </button>
+                    </a>
+                    """, unsafe_allow_html=True)
+                    
+                    # WhatsApp Share
+                    st.markdown(f"""
+                    <a href="https://wa.me/?text={share_text}" target="_blank">
+                        <button style="background-color: #25D366; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+                            💬 Share on WhatsApp
+                        </button>
+                    </a>
+                    """, unsafe_allow_html=True)
         else:
             st.error("Failed to generate QR code. Please check your inputs.")
 
@@ -512,6 +555,7 @@ st.markdown("""
 - For **links**, always include `https://`
 - For **phone numbers**, include country code (e.g., +1 for US)
 - For **WiFi**, double-check your password and encryption type
+- Use the **Share** buttons to quickly send your QR code to others
 """)
 
 # Developer Footer
